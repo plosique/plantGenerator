@@ -11,7 +11,7 @@ int main(){
     cfLSystem LSystem(productions);
     std::string axiom = "F-F-F-F"; 
     std::string word = apply(axiom, 3, LSystem);
-    sf::VertexArray vArr =  renderWord(word,100,100); 
+    sf::VertexArray vArr =  renderWord(word,100,100,90); 
 
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     while (window.isOpen())

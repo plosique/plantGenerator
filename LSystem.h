@@ -3,6 +3,7 @@
 #include<map>
 #include<utility>
 #include<iostream>
+#include<cmath> 
 
 #include <SFML/Graphics.hpp>
 
@@ -22,8 +23,10 @@ sf::Vector2f R270(sf::Vector2f xy){
 
 }
 
-sf::Vector2f R(sf::Vector2f xy, float theta){
-   return sf::Vector2f(sin(theta) ) 
+sf::Vector2f R(sf::Vector2f xy, float deg){
+   static float PI = acos(-1);
+   float theta = (PI*deg)/180; 
+   return sf::Vector2f(cos(theta)*xy.x - sin(theta)*xy.y,sin(theta)*xy.x+cos(theta)*xy.y); 
 }
 
 class turtle{
@@ -42,7 +45,7 @@ class turtle{
         }
 
         //update the turtle -- boolean indicates whether anything is actually drawn
-        bool processSymbol(char symbol){
+        bool processSymbol(char symbol,float theta){
             bool res = false; 
             switch(symbol){
                 case 'F':
@@ -50,11 +53,11 @@ class turtle{
                     res = true; 
                     break;
                case '-':
-                    dir = R270(dir);
+                    dir = R(dir,-theta);
                     res = false;
                     break;
                case '+':
-                    dir = R90(dir);
+                    dir = R(dir,theta);
                     res = false;
                     break;
                default:
@@ -97,7 +100,7 @@ std::string apply(std::string axiom,int depth,cfLSystem LSystem){
     return res; 
 }
 
-sf::VertexArray renderWord(std::string s,int startx, int starty){
+sf::VertexArray renderWord(std::string s,int startx, int starty,float theta){
     int numSymbols = s.size();  
     sf::VertexArray arr(sf::LinesStrip,numSymbols+1); 
     sf::Vector2f loc = sf::Vector2f(float(startx), float(starty));  
@@ -105,7 +108,7 @@ sf::VertexArray renderWord(std::string s,int startx, int starty){
     arr[0] = loc;
     turtle todd(loc, dir);
     for(int i=0;i<numSymbols;i++){
-        todd.processSymbol(s.at(i));
+        todd.processSymbol(s.at(i), theta);
         arr[i+1].position =  todd.getLoc(); 
         arr[i+1].color = sf::Color::Green; 
     }
