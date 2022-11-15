@@ -35,7 +35,7 @@ void scaleAndCenter(sf::VertexArray &va, int dimx,int dimy){
     float scalingFactor = ((4*fdimx)/5)/(maxx-minx);
     scale(va,scalingFactor);
 
-    sf::Vector2f translation1(dimx/10,dimx/10);
+    sf::Vector2f translation1(dimx/10,dimy/10);
     translate(va,translation1);
 
     
