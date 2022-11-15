@@ -100,10 +100,10 @@ std::string apply(std::string axiom,int depth,cfLSystem LSystem){
     return res; 
 }
 
-sf::VertexArray renderWord(std::string s,int startx, int starty,float theta){
+sf::VertexArray renderWord(std::string s, float theta){
     int numSymbols = s.size();  
     sf::VertexArray arr(sf::LinesStrip,numSymbols+1); 
-    sf::Vector2f loc = sf::Vector2f(float(startx), float(starty));  
+    sf::Vector2f loc = sf::Vector2f(0,0);
     sf::Vector2f dir(1,0);  
     arr[0] = loc;
     turtle todd(loc, dir);
