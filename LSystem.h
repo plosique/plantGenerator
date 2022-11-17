@@ -4,6 +4,7 @@
 #include<utility>
 #include<iostream>
 #include<cmath> 
+#include<stack>
 
 #include <SFML/Graphics.hpp>
 
@@ -32,7 +33,8 @@ sf::Vector2f R(sf::Vector2f xy, float deg){
 class turtle{
     sf::Vector2f loc; 
     sf::Vector2f dir; 
-
+    std::stack<std::pair<sf::Vector2f,sf::Vector2f>> stk; 
+    std::pair<sf::Vector2f,sf::Vector2f> top;
     public:
         turtle(sf::Vector2f _loc, sf::Vector2f _dir) :loc(_loc), dir(_dir) {};
 
@@ -46,24 +48,35 @@ class turtle{
 
         //update the turtle -- boolean indicates whether anything is actually drawn
         bool processSymbol(char symbol,float theta){
-            bool res = false; 
+            bool draw = false; 
             switch(symbol){
                 case 'F':
                     loc+=dir;
-                    res = true; 
+                    draw = true; 
                     break;
                case '-':
                     dir = R(dir,-theta);
-                    res = false;
+                    draw = false;
                     break;
                case '+':
                     dir = R(dir,theta);
-                    res = false;
+                    draw = false;
+                    break;
+               case '[':
+                    stk.push(std::make_pair(loc,dir));
+                    draw = false;
+                    break;
+               case ']':
+                    top = stk.top();
+                    stk.pop();
+                    loc = top.first;
+                    dir = top.second; 
+                    draw = false; 
                     break;
                default:
                     std::cerr<<"Unrecognized Symbol"<<std::endl;
             }
-            return res; 
+            return draw; 
         }
 };
 
@@ -104,13 +117,13 @@ sf::VertexArray renderWord(std::string s, float theta){
     int numSymbols = s.size();  
     sf::VertexArray arr(sf::LinesStrip,numSymbols+1); 
     sf::Vector2f loc = sf::Vector2f(0,0);
-    sf::Vector2f dir(1,0);  
+    sf::Vector2f dir(0,-1);  
     arr[0] = loc;
     turtle todd(loc, dir);
     for(int i=0;i<numSymbols;i++){
         todd.processSymbol(s.at(i), theta);
         arr[i+1].position =  todd.getLoc(); 
-        arr[i+1].color = sf::Color::Green; 
+        arr[i+1].color = sf::Color::White; 
     }
     
     return arr; 

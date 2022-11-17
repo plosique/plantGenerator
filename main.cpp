@@ -11,13 +11,17 @@ int main(){
     const int dimx = 500;
     const int dimy = 500;
 
+    //std::vector<std::pair<char,std::string>> productions(1);
+    //productions[0] = std::make_pair('F',"F-F+F+FF-F-F+F");
     std::vector<std::pair<char,std::string>> productions(1);
-    productions[0] = std::make_pair('F',"F-F+F+FF-F-F+F");
+    productions[0] = std::make_pair('F',"F[+F]F[-F]F");
+
 
     cfLSystem LSystem(productions);
-    std::string axiom = "F-F-F-F"; 
-    std::string word = apply(axiom, 3, LSystem);
-    sf::VertexArray vArr =  renderWord(word,90); 
+    //std::string axiom = "F-F-F-F"; 
+    std::string axiom = "F"; 
+    std::string word = apply(axiom, 5, LSystem);
+    sf::VertexArray vArr =  renderWord(word,25.7); 
     scaleAndCenter(vArr,dimx,dimy);
 
     sf::RenderWindow window(sf::VideoMode(dimx, dimy), "SFML works!");
