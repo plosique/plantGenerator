@@ -1,3 +1,6 @@
+#ifndef IMAGE_H
+#define IMAGE_H
+
 #include <SFML/Graphics.hpp>
 #include<iostream>
 
@@ -45,3 +48,5 @@ void scaleAndCenter(sf::VertexArray &va, int dimx,int dimy){
 
     
 }
+
+#endif

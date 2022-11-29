@@ -1,3 +1,5 @@
+#ifndef LSYSTEM_H
+#define LSYSTEM_H
 #include<string>
 #include<vector>
 #include<map>
@@ -129,3 +131,5 @@ sf::VertexArray renderWord(std::string s, float theta){
     return arr; 
 
 }
+
+#endif 

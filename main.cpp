@@ -1,29 +1,36 @@
-#include "LSystem.h"
-#include "Image.h"
+#include "lsystem.h"
+#include "image.h"
+#include "parser.h" 
 
-#include<vector> 
-#include<iostream>
+#include <vector> 
+#include <iostream>
+#include <string> 
+#include <fstream> 
 
 #include <SFML/Graphics.hpp>
 
 
-int main(){
+int main(const int argc, const char *argv[]){
+    if(argc!=2){
+      std::cout << "Usage ./fractal fractal_file" << std::endl; 
+       return 0; 
+    }
+
+    std::ifstream inputFile;
+    inputFile.open(argv[1],std::ios::in);
+   
+    Arguments arguments = parse(inputFile); 
+    print(arguments);
+
     const int dimx = 500;
     const int dimy = 500;
 
-    //std::vector<std::pair<char,std::string>> productions(1);
-    //productions[0] = std::make_pair('F',"F-F+F+FF-F-F+F");
-    std::vector<std::pair<char,std::string>> productions(1);
-    productions[0] = std::make_pair('F',"F[+F]F[-F]F");
-
-
-    cfLSystem LSystem(productions);
-    //std::string axiom = "F-F-F-F"; 
-    std::string axiom = "F"; 
-    std::string word = apply(axiom, 5, LSystem);
-    sf::VertexArray vArr =  renderWord(word,25.7); 
+    cfLSystem LSystem(arguments.productions);
+    std::string word = apply(arguments.axiom, arguments.n, LSystem);
+    sf::VertexArray vArr =  renderWord(word,arguments.delta); 
     scaleAndCenter(vArr,dimx,dimy);
 
+    /*
     sf::RenderWindow window(sf::VideoMode(dimx, dimy), "SFML works!");
     while (window.isOpen())
     {
@@ -39,6 +46,7 @@ int main(){
         window.draw(vArr);
         window.display();
     }
+    */
 
     return 0;
 }
