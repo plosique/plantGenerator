@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include<iostream>
 
-
-
 void scale(sf::VertexArray &va,float scalingFactor){
     for(unsigned int i=0;i<va.getVertexCount();i++){
         va[i].position*=scalingFactor; 
@@ -15,7 +13,6 @@ void scale(sf::VertexArray &va,float scalingFactor){
 void translate(sf::VertexArray &va,sf::Vector2f translation){
     for(unsigned int i=0;i<va.getVertexCount();i++){
         va[i].position+=translation; 
-        //va[i].position.y+=translation.y; 
     }
 }
 
@@ -34,16 +31,28 @@ void scaleAndCenter(sf::VertexArray &va, int dimx,int dimy){
         minx = std::min(minx,v.position.x);
         miny = std::min(miny,v.position.y);
     }
-    std::cout<<minx<<" "<<maxx<<" "<<std::endl;
-    std::cout<<miny<<" "<<maxy<<" "<<std::endl;
     sf::Vector2f translation0(-minx,-miny);
     translate(va,translation0);
 
+    float ry = maxy - miny;
+    float rx = maxx - minx; 
 
-    float scalingFactor = ((4*fdimx)/5)/(maxx-minx);
-    //scale(va,scalingFactor);
+    float r;
+    float fdim;
+    if(ry>rx){
+      r = ry;
+      fdim = fdimy; 
+    }else{
+      r = rx;
+      fdim = fdimx; 
+    }
 
-    sf::Vector2f translation1(fdimx/10,fdimy/10);
+    float scaler = 4./5.; 
+
+    float scalingFactor = (scaler*fdim)/r;
+    scale(va,scalingFactor);
+
+    sf::Vector2f translation1(fdimx/2-((scaler*fdim)/(2*r))*rx,fdimy/2. - ((scaler*fdim)/(2*r)*ry));
     translate(va,translation1);
 
     

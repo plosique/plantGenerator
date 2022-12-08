@@ -49,8 +49,8 @@ Arguments parse(std::ifstream &fractFile){
   for(int i=0;i<numAliases;i++){
     char key;
     fractFile >> key;
-    std::string replaces;
-    fractFile >> replaces;
+    std::string replacedBy;
+    fractFile >> replacedBy;
     char value;
     fractFile >> value; 
     arguments.aliases.insert(std::make_pair(key,value)); 

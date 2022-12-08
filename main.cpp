@@ -20,18 +20,16 @@ int main(const int argc, const char *argv[]){
     inputFile.open(argv[1],std::ios::in);
    
     Arguments arguments = parse(inputFile); 
-    print(arguments);
 
     const int dimx = 500;
     const int dimy = 500;
 
     cfLSystem LSystem(arguments.productions);
-    std::string word = apply(arguments.axiom, arguments.n, LSystem);
+    std::string word = apply(arguments.axiom, arguments.n, LSystem,arguments.aliases);
     sf::VertexArray vArr =  renderWord(word,arguments.delta); 
     scaleAndCenter(vArr,dimx,dimy);
 
-    /*
-    sf::RenderWindow window(sf::VideoMode(dimx, dimy), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(dimx, dimy), "Fractal Generator!");
     while (window.isOpen())
     {
         sf::Event event;
@@ -46,7 +44,6 @@ int main(const int argc, const char *argv[]){
         window.draw(vArr);
         window.display();
     }
-    */
 
     return 0;
 }

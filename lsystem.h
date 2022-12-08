@@ -1,12 +1,13 @@
 #ifndef LSYSTEM_H
 #define LSYSTEM_H
-#include<string>
-#include<vector>
-#include<map>
-#include<utility>
-#include<iostream>
-#include<cmath> 
-#include<stack>
+
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
+#include <iostream>
+#include <cmath> 
+#include <stack>
 
 #include <SFML/Graphics.hpp>
 
@@ -75,7 +76,12 @@ class turtle{
                     dir = top.second; 
                     draw = false; 
                     break;
+               case '$':
+                    draw = false;
+                    //this is a no-op
+                    break;
                default:
+                    draw = false;
                     std::cerr<<"Unrecognized Symbol"<<std::endl;
             }
             return draw; 
@@ -98,7 +104,7 @@ class cfLSystem{
         }
 };
 
-std::string apply(std::string axiom,int depth,cfLSystem LSystem){
+std::string apply(std::string axiom,int depth,cfLSystem LSystem, std::map<char,char> aliases){
     std::string res = axiom;
     std::map<char,std::string> productions = LSystem.getProductions();
     for(int i=0;i<depth;i++){
@@ -112,6 +118,12 @@ std::string apply(std::string axiom,int depth,cfLSystem LSystem){
         }
         res = resi; 
     }
+    for(int i=0;i<res.size();i++){
+      char c = res.at(i); 
+      if(aliases.count(c)){
+        res.at(i) = aliases[c]; 
+      }
+    }
     return res; 
 }
 
@@ -120,12 +132,19 @@ sf::VertexArray renderWord(std::string s, float theta){
     sf::VertexArray arr(sf::LinesStrip,numSymbols+1); 
     sf::Vector2f loc = sf::Vector2f(0,0);
     sf::Vector2f dir(0,-1);  
-    arr[0] = loc;
+    arr[0].position = loc; 
     turtle todd(loc, dir);
+    int top = 0; 
     for(int i=0;i<numSymbols;i++){
-        todd.processSymbol(s.at(i), theta);
-        arr[i+1].position =  todd.getLoc(); 
-        arr[i+1].color = sf::Color::White; 
+        bool draw = todd.processSymbol(s.at(i), theta);
+        arr[i+1].position = todd.getLoc(); 
+        if(draw){
+          arr[i+1].color = sf::Color::Green; 
+        }else{
+          arr[i+1].color = sf::Color::Transparent;
+        }
+        
+
     }
     
     return arr; 
